@@ -1,130 +1,55 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.4;
+//SPDX-License-Identifier: Unlicense
+pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "./IWhitelist.sol";
-
-contract CryptoDevs is ERC721Enumerable, Ownable {
-    /**
-     * @dev _baseTokenURI for computing {tokenURI}. If set, the resulting URI for each
-     * token will be the concatenation of the `baseURI` and the `tokenId`.
-     */
-    string _baseTokenURI;
-
-    //  _price is the price of one Crypto Dev NFT
-    uint256 public _price = 0.01 ether;
-
-    // _paused is used to pause the contract in case of an emergency
-    bool public _paused;
-
-    // max number of CryptoDevs
-    uint256 public maxTokenIds = 20;
-
-    // total number of tokenIds minted
-    uint256 public tokenIds;
-
-    // Whitelist contract instance
-    IWhitelist whitelist;
-
-    // boolean to keep track of whether presale started or not
-    bool public presaleStarted;
-
-    // timestamp for when presale would end
-    uint256 public presaleEnded;
-
-    modifier onlyWhenNotPaused() {
-        require(!_paused, "Contract currently paused");
-        _;
+contract Pindown {
+    struct doc {
+        bool valid;
+        address issuer;
+        address receiver;
+        string doclink;
+        string cid;
     }
 
-    /**
-     * @dev ERC721 constructor takes in a `name` and a `symbol` to the token collection.
-     * name in our case is `Crypto Devs` and symbol is `CD`.
-     * Constructor for Crypto Devs takes in the baseURI to set _baseTokenURI for the collection.
-     * It also initializes an instance of whitelist interface.
-     */
-    constructor(string memory baseURI, address whitelistContract)
-        ERC721("Crypto Devs", "CD")
+    // Creating a mapping
+    mapping(string => doc) public certificates;
+
+    function addCert(
+        string memory _certificateid,
+        string memory _doclink,
+        address _receiver
+    ) public {
+        // check if certificate has been issued
+        require(
+            !certificates[_certificateid].valid,
+            "Certificate has already been issued"
+        );
+        certificates[_certificateid].cid = _certificateid;
+        certificates[_certificateid].doclink = _doclink;
+        certificates[_certificateid].issuer = msg.sender;
+        certificates[_certificateid].receiver = _receiver;
+        certificates[_certificateid].valid = true;
+    }
+
+    function getCert(string memory _certificateid)
+        public
+        view
+        returns (
+            string memory,
+            string memory,
+            address,
+            address
+        )
     {
-        _baseTokenURI = baseURI;
-        whitelist = IWhitelist(whitelistContract);
-    }
-
-    /**
-     * @dev startPresale starts a presale for the whitelisted addresses
-     */
-    function startPresale() public onlyOwner {
-        presaleStarted = true;
-        // Set presaleEnded time as current timestamp + 5 minutes
-        // Solidity has cool syntax for timestamps (seconds, minutes, hours, days, years)
-        presaleEnded = block.timestamp + 5 minutes;
-    }
-
-    /**
-     * @dev presaleMint allows a user to mint one NFT per transaction during the presale.
-     */
-    function presaleMint() public payable onlyWhenNotPaused {
+        // check if certificate has been issued
         require(
-            presaleStarted && block.timestamp < presaleEnded,
-            "Presale is not running"
+            certificates[_certificateid].valid,
+            "Certificate has not been issued"
         );
-        require(
-            whitelist.whitelistedAddresses(msg.sender),
-            "You are not whitelisted"
-        );
-        require(tokenIds < maxTokenIds, "Exceeded maximum Crypto Devs supply");
-        require(msg.value >= _price, "Ether sent is not correct");
-        tokenIds += 1;
-        //_safeMint is a safer version of the _mint function as it ensures that
-        // if the address being minted to is a contract, then it knows how to deal with ERC721 tokens
-        // If the address being minted to is not a contract, it works the same way as _mint
-        _safeMint(msg.sender, tokenIds);
+        string memory _cid = certificates[_certificateid].cid;
+        string memory _doclink = certificates[_certificateid].doclink;
+        address _issuer = certificates[_certificateid].issuer;
+        address _receiver = certificates[_certificateid].receiver;
+
+        return (_cid, _doclink, _issuer, _receiver);
     }
-
-    /**
-     * @dev mint allows a user to mint 1 NFT per transaction after the presale has ended.
-     */
-    function mint() public payable onlyWhenNotPaused {
-        require(
-            presaleStarted && block.timestamp >= presaleEnded,
-            "Presale has not ended yet"
-        );
-        require(tokenIds < maxTokenIds, "Exceed maximum Crypto Devs supply");
-        require(msg.value >= _price, "Ether sent is not correct");
-        tokenIds += 1;
-        _safeMint(msg.sender, tokenIds);
-    }
-
-    /**
-     * @dev _baseURI overides the Openzeppelin's ERC721 implementation which by default
-     * returned an empty string for the baseURI
-     */
-    function _baseURI() internal view virtual override returns (string memory) {
-        return _baseTokenURI;
-    }
-
-    /**
-     * @dev setPaused makes the contract paused or unpaused
-     */
-    function setPaused(bool val) public onlyOwner {
-        _paused = val;
-    }
-
-    /**
-     * @dev withdraw sends all the ether in the contract
-     * to the owner of the contract
-     */
-    function withdraw() public onlyOwner {
-        address _owner = owner();
-        uint256 amount = address(this).balance;
-        (bool sent, ) = _owner.call{value: amount}("");
-        require(sent, "Failed to send Ether");
-    }
-
-    // Function to receive Ether. msg.data must be empty
-    receive() external payable {}
-
-    // Fallback function is called when msg.data is not empty
-    fallback() external payable {}
 }
