@@ -355,7 +355,10 @@ export default function Home() {
       }
     } else {
       return (
-        <button onClick={connectWallet} className="">
+        <button
+          onClick={connectWallet}
+          className="mt-2 mb-8 text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600  rounded text-lg"
+        >
           Connect your wallet
         </button>
       );
