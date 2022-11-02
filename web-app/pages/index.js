@@ -168,7 +168,7 @@ export default function Home() {
       if (inputMode) {
         return (
           <>
-            <div className="text-2xl text-slate-500 drop-shadow-lg mb-4 text-center">
+            <div className=" text-2xl text-slate-500 drop-shadow-lg mb-4 text-center ">
               Choose any Mode: Either issue a certificate or verify one.
             </div>
             <div className="flex justify-center py-4 border-b border-slate-500">
@@ -452,7 +452,7 @@ export default function Home() {
             </a>
           </div>
         </header>
-        <section className="text-gray-700 body-font ">
+        <section className="text-gray-700 body-font bg-slate-900 ">
           <div className="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center md:max-w-[1240px]">
             <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
               <h1 className="title-font sm:text-5xl text-4xl mb-4 font-medium text-gray-500">
