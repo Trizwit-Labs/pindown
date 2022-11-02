@@ -238,14 +238,21 @@ export default function Home() {
               Verify
             </button> */}
             <div className="flex justify-center my-4 py-4 border-b border-slate-500">
-              <button
+              {/* <button
                 type="submit"
                 onClick={issueMode}
                 className="inline-flex text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600 rounded text-lg"
               >
                 <a>Issue</a>
-              </button>
-              <a>
+              </button> */}
+                    <a href="#_" class="relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-purple-600 border-4 border-purple-600 rounded-full hover:text-white group hover:bg-gray-50">
+                    <span class="absolute left-0 block w-full h-0 transition-all bg-purple-600 opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
+                    <span class="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </span>
+                  <button   type ="submit" onClick={issueMode} class="relative">Issue</button>
+                  </a>
+              {/* <a>
                 <button
                   type="submit"
                   onClick={verifyMode}
@@ -253,7 +260,18 @@ export default function Home() {
                 >
                   Verify
                 </button>
-              </a>
+              </a> */}
+
+                <a href="#_" class="ml-4  relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-purple-600 border-4 border-purple-600 rounded-full hover:text-white group hover:bg-gray-50">
+                <span class="absolute left-0 block w-full h-0 transition-all bg-purple-600 opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
+                <span class="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
+                <svg xmlns="http://www.w3.org/2000/svg"  fill="currentColor" class="bi bi-patch-check w-5 h-5" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
+                <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z"/>
+                </svg>
+                </span>
+                <button type ="submit" onClick={verifyMode} class="relative">Verify</button>
+                </a>
             </div>
             <div className="text-3xl text-slate-800 font-medium mt-6 mb-4">
               {" "}
@@ -355,12 +373,21 @@ export default function Home() {
       }
     } else {
       return (
-        <button
-          onClick={connectWallet}
-          className="mt-2 mb-8 text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600  rounded text-lg"
-        >
-          Connect your wallet
-        </button>
+        <a href="#_" class="relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-purple-600 border-4 border-purple-600 rounded-full hover:text-white group hover:bg-gray-50">
+<span class="absolute left-0 block w-full h-0 transition-all bg-purple-600 opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
+<span class="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
+<svg class=' fontawesomesvg motion-safe:animate-bounce  w-5 h-5' stroke="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="white" d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V192c0-35.3-28.7-64-64-64H80c-8.8 0-16-7.2-16-16s7.2-16 16-16H448c17.7 0 32-14.3 32-32s-14.3-32-32-32H64zM416 336c-17.7 0-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32s-14.3 32-32 32z"/></svg>
+{/* <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg> */}
+</span>
+<button  onClick={connectWallet} class="relative">Connect your wallet</button>
+</a>
+
+        // <button
+        //   onClick={connectWallet}
+        //   className="mt-2 mb-8 text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600  rounded text-lg"
+        // >
+        //   Connect your wallet
+        // </button>
       );
     }
   };
