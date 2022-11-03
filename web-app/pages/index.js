@@ -167,8 +167,8 @@ export default function Home() {
     if (walletConnected) {
       if (inputMode) {
         return (
-          <>
-            <div className=" text-2xl text-slate-500 drop-shadow-lg mb-4 text-center ">
+          <span className="bg-slate-900">
+            <div className=" text-2xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 to-cyan-400 drop-shadow-lg mb-4 text-center ">
               Choose any Mode: Either issue a certificate or verify one.
             </div>
             <div className="flex justify-center py-4 border-b border-slate-500">
@@ -206,7 +206,7 @@ export default function Home() {
                 </button> */}
               </a>
             </div>
-            <div className="text-3xl text-slate-800 font-medium mt-6 mb-4">
+            <div className="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 text-slate-800 font-medium mt-6 mb-4">
               Issue Mode
             </div>
             <form
@@ -244,28 +244,17 @@ export default function Home() {
                 Issue Certificate
               </button>
             </form>
-          </>
+          </span>
         );
       } else if (!inputMode) {
         return (
           <div>
-            <div className="text-2xl text-slate-500 drop-shadow-lg  text-center">
+            <div className="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 to-cyan-400 drop-shadow-lg  text-center">
               Choose any Mode: Either issue a certificate or verify one.
             </div>
-            {/* <button type="submit" onClick={issueMode} className="test-2xl">
-              Issue
-            </button>
-            <button type="submit" onClick={verifyMode}>
-              Verify
-            </button> */}
-            <div className="flex justify-center my-4 py-4 border-b border-slate-500">
-              {/* <button
-                type="submit"
-                onClick={issueMode}
-                className="inline-flex text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600 rounded text-lg"
-              >
-                <a>Issue</a>
-              </button> */}
+           
+            <div className="flex justify-center my-4 py-4 border-b border-slate-500 ">
+           
                     <a href="#_" class="relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-blue-500 border-4 border-blue-400 rounded-full hover:text-white group hover:bg-gray-50">
                     <span class="absolute left-0 block w-full h-0 transition-all bg-gradient-to-r from-green-300 via-blue-500 to-purple-600  opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
                     <span class="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
@@ -273,15 +262,7 @@ export default function Home() {
                     </span>
                   <button   type ="submit" onClick={issueMode} class="relative">Issue</button>
                   </a>
-              {/* <a>
-                <button
-                  type="submit"
-                  onClick={verifyMode}
-                  className="ml-4 inline-flex text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600  rounded text-lg"
-                >
-                  Verify
-                </button>
-              </a> */}
+              
 
 
                 <a href="#_" class="ml-4  relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-blue-500 border-4 border-blue-400 rounded-full hover:text-white group hover:bg-gray-50">
@@ -295,7 +276,7 @@ export default function Home() {
                 <button type ="submit" onClick={verifyMode} class="relative">Verify</button>
                 </a>
             </div>
-            <div className="text-3xl text-slate-800 font-medium mt-6 mb-4">
+            <div className="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 font-medium mt-6 mb-4">
               {" "}
               Verification Mode
             </div>
@@ -396,20 +377,15 @@ export default function Home() {
     } else {
       return (
         <a href="#_" class="relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-blue-500 border-4 border-blue-400 rounded-full hover:text-white group hover:bg-gray-50">
-<span class="absolute left-0 block w-full h-0 transition-all bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
+<span class="absolute left-0 block w-full h-0 transition-all bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease" ></span>
 <span class="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
 <svg class=' fontawesomesvg motion-safe:animate-bounce  w-5 h-5' stroke="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="white" d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V192c0-35.3-28.7-64-64-64H80c-8.8 0-16-7.2-16-16s7.2-16 16-16H448c17.7 0 32-14.3 32-32s-14.3-32-32-32H64zM416 336c-17.7 0-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32s-14.3 32-32 32z"/></svg>
-{/* <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg> */}
+
 </span>
 <button  onClick={connectWallet} class="relative">Connect your wallet</button>
 </a>
 
-        // <button
-        //   onClick={connectWallet}
-        //   className="mt-2 mb-8 text-white bg-purple-500 border-0 py-2 px-6 focus:outline-none hover:bg-purple-600  rounded text-lg"
-        // >
-        //   Connect your wallet
-        // </button>
+       
       );
     }
   };
@@ -441,7 +417,7 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className=" bg-gradient-to-r  w-full from-rose-50 to-teal-50">
+      <div className=" bg-slate-900 w-full">
         <header className="text-gray-800 font-semibold md:sticky top-0 z-10 body-font backdrop-filter backdrop-blur-lg bg-opacity-30 border-b border-gray-200 shadow-lg">
           <div className="container mx-auto flex px-5 py-4 flex-row items-center justify-between">
             <a className="flex title-font font-medium items-center text-gray-700  md:mb-0">
@@ -452,42 +428,42 @@ export default function Home() {
             </a>
           </div>
         </header>
-        <section className="text-gray-700 body-font bg-slate-900 ">
+        <section className=" body-font  ">
           <div className="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center md:max-w-[1240px]">
             <div className="lg:flex-grow md:w-1/2 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
-              <h1 className="title-font sm:text-5xl text-4xl mb-4 font-medium text-gray-500">
-                <a className="text-gray-800 font-semibold">PinDown </a>
-                <br className="hidden lg:inline-block" />
+              <h1 className="title-font sm:text-5xl text-4xl mb-4 font-medium text-transparent bg-clip-text  bg-gradient-to-r from-slate-500 to-yellow-100">
+                <a className="  font-semibold">PinDown.</a>
+                <br className=" hidden lg:inline-block  " />
                 Blockchain-based document verifier 
               </h1>
-              <p className="mb-8 leading-relaxed text-lg md:text-xl ">
+              <p className="mb-8 leading-relaxed text-lg md:text-xl text-white ">
                 {walletConnected? "" :"Issue and verify authentic certificates!"}
               </p>
           
-              <p className="mb-8 leading-relaxed text-lg md:text-xl ">
+              <p className="mb-8 leading-relaxed text-lg md:text-xl text-transparent bg-clip-text bg-clip-text bg-gradient-to-r from-cyan-200 to-cyan-400 ">
                {walletConnected?  "" : "To start off connect with your crypto wallet!"} 
               </p>
             </div>
             <div className="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
               <img
-                className="object-cover object-center rounded max-h-64"
+                className="object-cover object-center rounded max-h-64 "
                 alt="hero"
                 src="https://cdn.pixabay.com/photo/2013/07/12/17/00/drawing-pin-151658__340.png"
               />
             </div>
           </div>
         </section>
-        <div className="flex items-center w-full mb-16">
-          <div className="max-w-[1200px] mx-auto">{renderButton()}</div>
+        <div className="flex items-center w-full mb-16 bg-slate-900">
+          <div className="max-w-[1200px] mx-auto bg-slate-900">{renderButton()}</div>
         </div>
-
-        <footer className="text-gray-500 bg-gradient-to-r  w-full from-rose-50 to-teal-50 border-t-2 border-gray-300 shadow-xl body-font">
-          <div className="container px-5 py-4 mx-auto flex items-center sm:flex-row flex-col">
+        
+        <footer className="text-gray-500   w-full f border-t-2 border-gray-300 shadow-xl body-font ">
+          <div className="container px-5 py-4 mx-auto flex items-center sm:flex-row flex-col bg-slate-900">
             <a className="flex title-font font-medium items-center md:justify-start justify-center text-violet-500">
               {/* <img src="img/zindothead.png" alt="Zindot" width="50" height="50" /> */}
-              <span className="ml-3 text-2xl">PinDown.</span>
+              <span className="ml-3 text-2xl text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600">PinDown.</span>
             </a>
-            <p className="text-sm text-gray-600 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-300 sm:py-2 sm:mt-0 mt-4">
+            <p className="text-sm text-white sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-300 sm:py-2 sm:mt-0 mt-4">
               Made with &#10084; by Trizwit
             </p>
           </div>
