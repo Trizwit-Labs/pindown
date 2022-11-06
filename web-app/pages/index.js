@@ -1,4 +1,5 @@
 import Head from "next/head";
+
 // import styles from "../styles/Home.module.css";
 import Web3Modal from "web3modal";
 import { providers, Contract, utils } from "ethers";
@@ -206,7 +207,7 @@ export default function Home() {
                 </button> */}
               </a>
             </div>
-            <div className="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 text-slate-800 font-medium mt-6 mb-4">
+            <div className="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 font-medium mt-6 mb-4">
               Issue Mode
             </div>
             <form
@@ -216,22 +217,23 @@ export default function Home() {
                 addDoc();
               }}
             >
+              
               <input
-                className="border-2 hover:border-blue-600 my-2 "
+                className="bg-slate-800 appearance-none border-2 border-slate-500 rounded-full py-2 px-4 text-green-200 leading-tight focus:outline-none  focus:border-blue-400 my-2"
                 type="text"
                 placeholder="Enter CID!"
                 value={cidValue}
                 onChange={onCidChange}
               />
               <input
-                className="border-2 hover:border-blue-600 my-2 "
+                className="bg-slate-800 appearance-none border-2 border-slate-500 rounded-full py-2 px-4 text-green-200 leading-tight focus:outline-none  focus:border-blue-400 my-2"
                 type="text"
                 placeholder="Enter doc link!"
                 value={inputValue}
                 onChange={onInputChange}
               />
               <input
-                className="border-2 hover:border-blue-600 my-2 "
+                className="bg-slate-800 appearance-none border-2 border-slate-500 rounded-full py-2 px-4 text-green-200 leading-tight focus:outline-none  focus:border-blue-400 my-2"
                 type="text"
                 placeholder="Enter receiver address!"
                 value={recAddress}
@@ -288,7 +290,7 @@ export default function Home() {
               }}
             >
               <input
-                className="border-2 hover:border-blue-600 my-2 "
+                className="bg-slate-800 appearance-none border-2 border-slate-500 rounded-full py-2 px-4 text-green-200 leading-tight focus:outline-none  focus:border-blue-400 my-2"
                 type="text"
                 placeholder="Enter CID!"
                 value={cidValue}
@@ -307,35 +309,35 @@ export default function Home() {
                 <div className="">
                   <img className="max-h[300px]" src={verifiedDoc[1]} />
                   <div className="mt-4 ">
-                    <p className="text-xl font-semibold text-purple-800 ">
+                    <p className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 ">
                       CID:
                     </p>
                     <span>
-                      <p className="text-lg mb-2 text-slate-800">
+                      <p className="text-lg mb-2 text-white bg-clip">
                         {verifiedDoc[0]}
                       </p>
                     </span>
-                    <p className="text-xl font-semibold text-purple-800">
+                    <p className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600">
                       Doclink:
                     </p>
                     <span>
-                      <p className="text-lg mb-2 text-slate-800">
+                      <p className="text-lg mb-2 text-white">
                         {verifiedDoc[1]}
                       </p>
                     </span>
-                    <p className="text-xl font-semibold text-purple-800">
+                    <p className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600">
                       Issuer:
                     </p>
                     <span>
-                      <p className="text-lg mb-2 text-slate-800">
+                      <p className="text-lg mb-2 text-white">
                         {verifiedDoc[2]}
                       </p>
                     </span>
-                    <p className="text-xl font-semibold text-purple-800">
+                    <p className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600">
                       Receiver:
                     </p>
                     <span>
-                      <p className="text-lg mb-2 text-slate-800">
+                      <p className="text-lg mb-2 text-white">
                         {verifiedDoc[3]}
                       </p>
                     </span>
@@ -346,7 +348,8 @@ export default function Home() {
           </div>
         );
       } else if (loading) {
-        return <button className="">Loading...</button>;
+        return 
+        <button className="text-2xl text-slate-500 drop-shadow-lg border border-slate-800 text-center">Loading...</button>;
       } else {
         return (
           <>
@@ -448,7 +451,8 @@ export default function Home() {
               <img
                 className="object-cover object-center rounded max-h-64 "
                 alt="hero"
-                src="https://cdn.pixabay.com/photo/2013/07/12/17/00/drawing-pin-151658__340.png"
+                // src={require('/img/pin_doc.png').default}
+                 src="https://cdn.pixabay.com/photo/2013/07/12/17/00/drawing-pin-151658__340.png"
               />
             </div>
           </div>
