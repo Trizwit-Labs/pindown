@@ -34,3 +34,9 @@ Go inside web-app directory and run next app in dev mode
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## Contribution Setup
+
+Git Workflow is followed
+For new features, create feature branch from dev branch.
+Once changes is committed push them to origin and PR from feature branch to dev branch
