@@ -1,10 +1,13 @@
 import Head from "next/head";
+import Image from "next/image";
 
 // import styles from "../styles/Home.module.css";
+const axios = require("axios");
 import Web3Modal from "web3modal";
 import { providers, Contract, utils } from "ethers";
 import { useEffect, useRef, useState } from "react";
 import { PINDOWN_CONTRACT_ADDRESS, abi } from "../constants";
+import pindownImg from "../img/pin_doc.png";
 
 export default function Home() {
   // walletConnected keep track of whether the user's wallet is connected or not
@@ -18,7 +21,6 @@ export default function Home() {
   const [cidValue, setCidValue] = useState("");
   const [recAddress, setRecAddress] = useState("");
   const [verifiedDoc, setVerifiedDoc] = useState("");
-  
 
   // const [numberOfWhitelisted, setNumberOfWhitelisted] = useState(0);
   // Create a reference to the Web3 Modal (used for connecting to Metamask) which persists as long as the page is open
@@ -37,12 +39,9 @@ export default function Home() {
    * @param {*} needSigner - True if you need the signer, default false otherwise
    */
   const getProviderOrSigner = async (needSigner = false) => {
-    // Connect to Metamask
-    // Since we store `web3Modal` as a reference, we need to access the `current` value to get access to the underlying object
     const provider = await web3ModalRef.current.connect();
     const web3Provider = new providers.Web3Provider(provider);
 
-    // If user is not connected to the Mumbai network, let them know and throw an error
     const { chainId } = await web3Provider.getNetwork();
     if (chainId !== 80001) {
       window.alert("Change the network to Mumbai");
@@ -56,16 +55,12 @@ export default function Home() {
     return web3Provider;
   };
 
-  /**
-   * addAddressToWhitelist: Adds the current connected address to the whitelist
-   */
   const addDoc = async () => {
     try {
       const rec_adr = utils.getAddress(recAddress);
-      // We need a Signer here since this is a 'write' transaction.
+
       const signer = await getProviderOrSigner(true);
-      // Create a new instance of the Contract with a Signer, which allows
-      // update methods
+
       const pindownContract = new Contract(
         PINDOWN_CONTRACT_ADDRESS,
         abi,
@@ -74,7 +69,6 @@ export default function Home() {
 
       const tx = await pindownContract.addCert(cidValue, inputValue, rec_adr);
       setLoading(true);
-      // wait for the transaction to get mined
       await tx.wait();
       setLoading(false);
       window.alert("Certificate added successfully");
@@ -83,26 +77,20 @@ export default function Home() {
     }
   };
 
-  // const getNumberOfWhitelisted = async () => {
-  //   try {
-  //     // Get the provider from web3Modal, which in our case is MetaMask
-  //     // No need for the Signer here, as we are only reading state from the blockchain
-  //     const provider = await getProviderOrSigner();
-  //     // We connect to the Contract using a Provider, so we will only
-  //     // have read-only access to the Contract
-  //     const pindownContract = new Contract(
-  //       PINDOWN_CONTRACT_ADDRESS,
-  //       abi,
-  //       provider
-  //     );
-  //     // call the numAddressesWhitelisted from the contract
-  //     const _numberOfWhitelisted =
-  //       await pindownContract.numAddressesWhitelisted();
-  //     setNumberOfWhitelisted(_numberOfWhitelisted);
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
+  const uploadDoc = async () => {
+    try {
+      // window.alert("Certificate added successfully");
+      axios.post(url, data, {
+        headers: {
+          "Content-Type": `multipart/form-data; boundary= ${data._boundary}`,
+          pinata_api_key: pinataApiKey,
+          pinata_secret_api_key: pinataSecretApiKey,
+        },
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const verifyDoc = async () => {
     try {
@@ -112,7 +100,6 @@ export default function Home() {
         abi,
         signer
       );
-      // Get the address associated to the signer which is connected to  MetaMask
       const address = await signer.getAddress();
 
       const _verifiedcertificate = await pindownContract.getCert(cidValue);
@@ -163,7 +150,6 @@ export default function Home() {
 
   */
 
- 
   const renderButton = () => {
     if (walletConnected) {
       if (inputMode) {
@@ -173,13 +159,31 @@ export default function Home() {
               Choose any Mode: Either issue a certificate or verify one.
             </div>
             <div className="flex justify-center py-4 border-b border-slate-500">
-            <a href="#_" class="relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-blue-500 border-4 border-blue-400 rounded-full hover:text-white group hover:bg-gray-50">
-                    <span class="absolute left-0 block w-full h-0 transition-all bg-gradient-to-r from-green-300 via-blue-500 to-purple-600  opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
-                    <span class="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
-                  <button   type ="submit" onClick={issueMode} class="relative">Issue</button>
-                  </a>
+              <a
+                href="#_"
+                class="relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-blue-500 border-4 border-blue-400 rounded-full hover:text-white group hover:bg-gray-50"
+              >
+                <span class="absolute left-0 block w-full h-0 transition-all bg-gradient-to-r from-green-300 via-blue-500 to-purple-600  opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
+                <span class="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
+                  <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    ></path>
+                  </svg>
+                </span>
+                <button type="submit" onClick={issueMode} class="relative">
+                  Issue
+                </button>
+              </a>
               {/* <button
                 type="submit"
                 onClick={issueMode}
@@ -188,15 +192,28 @@ export default function Home() {
                 <a>Issue</a>
               </button> */}
               <a>
-              <a href="#_" class="ml-4  relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-blue-500 border-4 border-blue-400 rounded-full hover:text-white group hover:bg-gray-50">
-                <span class="absolute left-0 block w-full h-0 transition-all bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
-                <span class="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
-                <svg xmlns="http://www.w3.org/2000/svg"  fill="currentColor" class="bi bi-patch-check w-5 h-5" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
-                <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z"/>
-                </svg>
-                </span>
-                <button type ="submit" onClick={verifyMode} class="relative">Verify</button>
+                <a
+                  href="#_"
+                  class="ml-4  relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-blue-500 border-4 border-blue-400 rounded-full hover:text-white group hover:bg-gray-50"
+                >
+                  <span class="absolute left-0 block w-full h-0 transition-all bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
+                  <span class="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      class="bi bi-patch-check w-5 h-5"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"
+                      />
+                      <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z" />
+                    </svg>
+                  </span>
+                  <button type="submit" onClick={verifyMode} class="relative">
+                    Verify
+                  </button>
                 </a>
                 {/* <button
                   type="submit"
@@ -210,14 +227,37 @@ export default function Home() {
             <div className="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 font-medium mt-6 mb-4">
               Issue Mode
             </div>
+            {/* <form
+              className="flex flex-col"
+              onSubmit={(event) => {
+                event.preventDefault();
+                uploadDoc();
+              }}
+            >
+              <input type="file" id="file" className="bg-slate-400">
+                Upload File
+              </input>
+              <button
+                type="submit"
+                className="mt-2 text-white bg-blue-400 border-0 py-2 px-6 focus:outline-none hover:bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 rounded text-lg"
+              >
+                Upload to IPFS
+              </button>
+            </form> */}
             <form
               className="flex flex-col"
               onSubmit={(event) => {
                 event.preventDefault();
-                addDoc();
+                uploadDoc();
               }}
             >
-              
+              <input
+                type="file"
+                id="file"
+                className="bg-slate-400"
+                placeholder="upload cert"
+              />
+
               <input
                 className="bg-slate-800 appearance-none border-2 border-slate-500 rounded-full py-2 px-4 text-green-200 leading-tight focus:outline-none  focus:border-blue-400 my-2"
                 type="text"
@@ -254,29 +294,57 @@ export default function Home() {
             <div className="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 to-cyan-400 drop-shadow-lg  text-center">
               Choose any Mode: Either issue a certificate or verify one.
             </div>
-           
+
             <div className="flex justify-center my-4 py-4 border-b border-slate-500 ">
-           
-                    <a href="#_" class="relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-blue-500 border-4 border-blue-400 rounded-full hover:text-white group hover:bg-gray-50">
-                    <span class="absolute left-0 block w-full h-0 transition-all bg-gradient-to-r from-green-300 via-blue-500 to-purple-600  opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
-                    <span class="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </span>
-                  <button   type ="submit" onClick={issueMode} class="relative">Issue</button>
-                  </a>
-              
+              <a
+                href="#_"
+                class="relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-blue-500 border-4 border-blue-400 rounded-full hover:text-white group hover:bg-gray-50"
+              >
+                <span class="absolute left-0 block w-full h-0 transition-all bg-gradient-to-r from-green-300 via-blue-500 to-purple-600  opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
+                <span class="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
+                  <svg
+                    class="w-5 h-5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    ></path>
+                  </svg>
+                </span>
+                <button type="submit" onClick={issueMode} class="relative">
+                  Issue
+                </button>
+              </a>
 
-
-                <a href="#_" class="ml-4  relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-blue-500 border-4 border-blue-400 rounded-full hover:text-white group hover:bg-gray-50">
+              <a
+                href="#_"
+                class="ml-4  relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-blue-500 border-4 border-blue-400 rounded-full hover:text-white group hover:bg-gray-50"
+              >
                 <span class="absolute left-0 block w-full h-0 transition-all bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
                 <span class="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
-                <svg xmlns="http://www.w3.org/2000/svg"  fill="currentColor" class="bi bi-patch-check w-5 h-5" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"/>
-                <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z"/>
-                </svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    class="bi bi-patch-check w-5 h-5"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10.354 6.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708 0z"
+                    />
+                    <path d="m10.273 2.513-.921-.944.715-.698.622.637.89-.011a2.89 2.89 0 0 1 2.924 2.924l-.01.89.636.622a2.89 2.89 0 0 1 0 4.134l-.637.622.011.89a2.89 2.89 0 0 1-2.924 2.924l-.89-.01-.622.636a2.89 2.89 0 0 1-4.134 0l-.622-.637-.89.011a2.89 2.89 0 0 1-2.924-2.924l.01-.89-.636-.622a2.89 2.89 0 0 1 0-4.134l.637-.622-.011-.89a2.89 2.89 0 0 1 2.924-2.924l.89.01.622-.636a2.89 2.89 0 0 1 4.134 0l-.715.698a1.89 1.89 0 0 0-2.704 0l-.92.944-1.32-.016a1.89 1.89 0 0 0-1.911 1.912l.016 1.318-.944.921a1.89 1.89 0 0 0 0 2.704l.944.92-.016 1.32a1.89 1.89 0 0 0 1.912 1.911l1.318-.016.921.944a1.89 1.89 0 0 0 2.704 0l.92-.944 1.32.016a1.89 1.89 0 0 0 1.911-1.912l-.016-1.318.944-.921a1.89 1.89 0 0 0 0-2.704l-.944-.92.016-1.32a1.89 1.89 0 0 0-1.912-1.911l-1.318.016z" />
+                  </svg>
                 </span>
-                <button type ="submit" onClick={verifyMode} class="relative">Verify</button>
-                </a>
+                <button type="submit" onClick={verifyMode} class="relative">
+                  Verify
+                </button>
+              </a>
             </div>
             <div className="text-3xl text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 font-medium mt-6 mb-4">
               {" "}
@@ -306,50 +374,83 @@ export default function Home() {
             </form>
             <div className="w-full px-4 py-6 rounded shadow-lg">
               {verifiedDoc && (
-                <div className="">
-                  <img className="max-h[300px]" src={verifiedDoc[1]} />
-                  <div className="mt-4 ">
-                    <p className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 ">
-                      CID:
+                ////////////////////////////
+                ///////////////////////////
+
+                <div className="max-w-sm rounded overflow-hidden mx-auto bg-slate-700 shadow-lg">
+                  {/* <img className="w-full" src="/img/card-top.jpg" alt="Sunset in the mountains"> */}
+                  <img className="w-full mx-auto" src={verifiedDoc[1]} />
+                  <div className="px-6 py-4">
+                    <div className="font-bold text-xl mb-2">
+                      The Coldest Sunset
+                    </div>
+                    <p className="text-gray-700 text-base">
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                      Voluptatibus quia, nulla! Maiores et perferendis eaque,
+                      exercitationem praesentium nihil.
                     </p>
-                    <span>
-                      <p className="text-lg mb-2 text-white bg-clip">
-                        {verifiedDoc[0]}
-                      </p>
+                  </div>
+                  <div className="px-6 pt-4 pb-2">
+                    <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                      #photography
                     </span>
-                    <p className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600">
-                      Doclink:
-                    </p>
-                    <span>
-                      <p className="text-lg mb-2 text-white">
-                        {verifiedDoc[1]}
-                      </p>
+                    <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                      #travel
                     </span>
-                    <p className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600">
-                      Issuer:
-                    </p>
-                    <span>
-                      <p className="text-lg mb-2 text-white">
-                        {verifiedDoc[2]}
-                      </p>
-                    </span>
-                    <p className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600">
-                      Receiver:
-                    </p>
-                    <span>
-                      <p className="text-lg mb-2 text-white">
-                        {verifiedDoc[3]}
-                      </p>
+                    <span className="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                      #winter
                     </span>
                   </div>
                 </div>
+
+                //////////////////////////////
+                /////////////////////////////
+                // <div className="">
+                //   <img className="max-h[300px]" src={verifiedDoc[1]} />
+                //   <div className="mt-4 ">
+                //     <p className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 ">
+                //       CID:
+                //     </p>
+                //     <span>
+                //       <p className="text-lg mb-2 text-white bg-clip">
+                //         {verifiedDoc[0]}
+                //       </p>
+                //     </span>
+                //     <p className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600">
+                //       Doclink:
+                //     </p>
+                //     <span>
+                //       <p className="text-lg mb-2 text-white">
+                //         {verifiedDoc[1]}
+                //       </p>
+                //     </span>
+                //     <p className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600">
+                //       Issuer:
+                //     </p>
+                //     <span>
+                //       <p className="text-lg mb-2 text-white">
+                //         {verifiedDoc[2]}
+                //       </p>
+                //     </span>
+                //     <p className="text-xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600">
+                //       Receiver:
+                //     </p>
+                //     <span>
+                //       <p className="text-lg mb-2 text-white">
+                //         {verifiedDoc[3]}
+                //       </p>
+                //     </span>
+                //   </div>
+                // </div>
               )}
             </div>
           </div>
         );
       } else if (loading) {
-        return 
-        <button className="text-2xl text-slate-500 drop-shadow-lg border border-slate-800 text-center">Loading...</button>;
+        return;
+        <button className="text-2xl text-slate-500 drop-shadow-lg border border-slate-800 text-center">
+          Loading...
+        </button>;
       } else {
         return (
           <>
@@ -379,16 +480,28 @@ export default function Home() {
       }
     } else {
       return (
-        <a href="#_" class="relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-blue-500 border-4 border-blue-400 rounded-full hover:text-white group hover:bg-gray-50">
-<span class="absolute left-0 block w-full h-0 transition-all bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease" ></span>
-<span class="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
-<svg class=' fontawesomesvg motion-safe:animate-bounce  w-5 h-5' stroke="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="white" d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V192c0-35.3-28.7-64-64-64H80c-8.8 0-16-7.2-16-16s7.2-16 16-16H448c17.7 0 32-14.3 32-32s-14.3-32-32-32H64zM416 336c-17.7 0-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32s-14.3 32-32 32z"/></svg>
-
-</span>
-<button  onClick={connectWallet} class="relative">Connect your wallet</button>
-</a>
-
-       
+        <a
+          href="#_"
+          class="relative inline-flex items-center px-12 py-3 overflow-hidden text-lg font-medium text-blue-500 border-4 border-blue-400 rounded-full hover:text-white group hover:bg-gray-50"
+        >
+          <span class="absolute left-0 block w-full h-0 transition-all bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 opacity-100 group-hover:h-full top-1/2 group-hover:top-0 duration-400 ease"></span>
+          <span class="absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full group-hover:translate-x-0 ease">
+            <svg
+              class=" fontawesomesvg motion-safe:animate-bounce  w-5 h-5"
+              stroke="currentColor"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+            >
+              <path
+                fill="white"
+                d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V192c0-35.3-28.7-64-64-64H80c-8.8 0-16-7.2-16-16s7.2-16 16-16H448c17.7 0 32-14.3 32-32s-14.3-32-32-32H64zM416 336c-17.7 0-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32s-14.3 32-32 32z"
+              />
+            </svg>
+          </span>
+          <button onClick={connectWallet} class="relative">
+            Connect your wallet
+          </button>
+        </a>
       );
     }
   };
@@ -437,35 +550,43 @@ export default function Home() {
               <h1 className="title-font sm:text-5xl text-4xl mb-4 font-medium text-transparent bg-clip-text  bg-gradient-to-r from-slate-500 to-yellow-100">
                 <a className="  font-semibold">PinDown.</a>
                 <br className=" hidden lg:inline-block  " />
-                Blockchain-based document verifier 
+                Blockchain-based document verifier
               </h1>
               <p className="mb-8 leading-relaxed text-lg md:text-xl text-white ">
-                {walletConnected? "" :"Issue and verify authentic certificates!"}
+                {walletConnected
+                  ? ""
+                  : "Issue and verify authentic certificates!"}
               </p>
-          
-              <p className="mb-8 leading-relaxed text-lg md:text-xl text-transparent bg-clip-text bg-clip-text bg-gradient-to-r from-cyan-200 to-cyan-400 ">
-               {walletConnected?  "" : "To start off connect with your crypto wallet!"} 
+
+              <p className="mb-8 leading-relaxed text-lg md:text-xl text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 to-cyan-400 ">
+                {walletConnected
+                  ? ""
+                  : "To start off connect with your crypto wallet!"}
               </p>
             </div>
             <div className="lg:max-w-lg lg:w-full md:w-1/2 w-5/6">
-              <img
+              {/* <img
                 className="object-cover object-center rounded max-h-64 "
                 alt="hero"
                 // src={require('/img/pin_doc.png').default}
-                 src="https://cdn.pixabay.com/photo/2013/07/12/17/00/drawing-pin-151658__340.png"
-              />
+                src="https://cdn.pixabay.com/photo/2013/07/12/17/00/drawing-pin-151658__340.png"
+              /> */}
+              <Image src={pindownImg} className="w-full" />
             </div>
           </div>
         </section>
         <div className="flex items-center w-full mb-16 bg-slate-900">
-          <div className="max-w-[1200px] mx-auto bg-slate-900">{renderButton()}</div>
+          <div className="max-w-[1200px] mx-auto bg-slate-900">
+            {renderButton()}
+          </div>
         </div>
-        
+
         <footer className="text-gray-500   w-full f border-t-2 border-gray-300 shadow-xl body-font ">
           <div className="container px-5 py-4 mx-auto flex items-center sm:flex-row flex-col bg-slate-900">
             <a className="flex title-font font-medium items-center md:justify-start justify-center text-violet-500">
-              {/* <img src="img/zindothead.png" alt="Zindot" width="50" height="50" /> */}
-              <span className="ml-3 text-2xl text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600">PinDown.</span>
+              <span className="ml-3 text-2xl text-transparent bg-clip-text bg-gradient-to-r from-green-300 via-blue-500 to-purple-600">
+                PinDown.
+              </span>
             </a>
             <p className="text-sm text-white sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-300 sm:py-2 sm:mt-0 mt-4">
               Made with &#10084; by Trizwit
