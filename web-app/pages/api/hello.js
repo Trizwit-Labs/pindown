@@ -1,13 +1,17 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 const axios = require("axios");
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   if (req.method === "POST") {
-    const pinata_api_key = "f2c375a1ea40d7719ea3";
-    const pinata_secret_api_key =
+    const pinataApiKey = "f2c375a1ea40d7719ea3";
+    const pinataSecretApiKey =
       "98d76f167b22a0144b85deb4bbe7338d4df1b05ab8b4495062e892e1ad379602";
+    const result = await testAuthentication(req.body);
+    if (true) {
+      res.status(200).json(req.body);
+    }
   } else {
-    res.status(200).json({ name: "hey" });
+    res.status(200).json("req.body ");
   }
 }
 
@@ -29,11 +33,11 @@ const testAuthentication = () => {
     });
 };
 
-const pinFileToIPFS = (pinataApiKey, pinataSecretApiKey) => {
+const pinFileToIPFS = (pinataApiKey, pinataSecretApiKey, file) => {
   const url = `https://api.pinata.cloud/pinning/pinJSONToIPFS`;
   //we gather a local file from the API for this example, but you can gather the file from anywhere
   let data = new FormData();
-  data.append("file", fs.createReadStream("./yourfile.png"));
+  data.append("file", file);
   return axios
     .post(url, data, {
       headers: {
@@ -43,9 +47,9 @@ const pinFileToIPFS = (pinataApiKey, pinataSecretApiKey) => {
       },
     })
     .then(function (response) {
-      //handle response here
+      return true;
     })
     .catch(function (error) {
-      //handle error here
+      return false;
     });
 };

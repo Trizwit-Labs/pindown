@@ -21,6 +21,7 @@ export default function Home() {
   const [cidValue, setCidValue] = useState("");
   const [recAddress, setRecAddress] = useState("");
   const [verifiedDoc, setVerifiedDoc] = useState("");
+  const [file, setFile] = useState(null);
 
   // const [numberOfWhitelisted, setNumberOfWhitelisted] = useState(0);
   // Create a reference to the Web3 Modal (used for connecting to Metamask) which persists as long as the page is open
@@ -80,13 +81,40 @@ export default function Home() {
   const uploadDoc = async () => {
     try {
       // window.alert("Certificate added successfully");
-      axios.post(url, data, {
+      let formData = new FormData();
+      formData.append("file", file);
+      formData.append("fileName", file.name);
+      console.log(">> formData >> ", formData);
+      const config = {
         headers: {
-          "Content-Type": `multipart/form-data; boundary= ${data._boundary}`,
-          pinata_api_key: pinataApiKey,
-          pinata_secret_api_key: pinataSecretApiKey,
+          "content-type": "multipart/form-data",
         },
-      });
+      };
+      axios
+        .post("http://localhost:3000/api/hello", formData, config)
+        .then((response) => {
+          console.log(response.data);
+        });
+
+      // You should have a server side REST API
+      // axios.post('http://localhost:8080/restapi/fileupload',
+      //     formData, {
+      //       headers: {
+      //         'Content-Type': 'multipart/form-data'
+      //       }
+      //     }
+      // ).then(function () {
+      //   console.log('SUCCESS!!');
+      //   })
+      //   .catch(function () {
+      //     console.log('FAILURE!!');
+      //   });
+      // axios.post(url, data, {
+      //   headers: {
+      //     "Content-Type": "You will perhaps need to define a content-type here"
+      //   },
+
+      // });
     } catch (err) {
       console.error(err);
     }
@@ -125,6 +153,10 @@ export default function Home() {
       console.error(err);
     }
   };
+
+  function onFileChange(event) {
+    setFile(event.target.files[0]);
+  }
   const onInputChange = (event) => {
     const { value } = event.target;
     setInputValue(value);
@@ -256,29 +288,30 @@ export default function Home() {
                 id="file"
                 className="bg-slate-400"
                 placeholder="upload cert"
+                onChange={onFileChange}
               />
 
-              <input
+              {/* <input
                 className="bg-slate-800 appearance-none border-2 border-slate-500 rounded-full py-2 px-4 text-green-200 leading-tight focus:outline-none  focus:border-blue-400 my-2"
                 type="text"
                 placeholder="Enter CID!"
-                value={cidValue}
-                onChange={onCidChange}
+                // value={cidValue}
+                // onChange={onCidChange}
               />
               <input
                 className="bg-slate-800 appearance-none border-2 border-slate-500 rounded-full py-2 px-4 text-green-200 leading-tight focus:outline-none  focus:border-blue-400 my-2"
                 type="text"
                 placeholder="Enter doc link!"
-                value={inputValue}
-                onChange={onInputChange}
-              />
-              <input
+                // value={inputValue}
+                // onChange={onInputChange}
+              /> */}
+              {/* <input
                 className="bg-slate-800 appearance-none border-2 border-slate-500 rounded-full py-2 px-4 text-green-200 leading-tight focus:outline-none  focus:border-blue-400 my-2"
                 type="text"
                 placeholder="Enter receiver address!"
-                value={recAddress}
-                onChange={onRecAddressChange}
-              />
+                // value={recAddress}
+                // onChange={onRecAddressChange}
+              /> */}
               <button
                 type="submit"
                 className="mt-2 text-white bg-blue-400 border-0 py-2 px-6 focus:outline-none hover:bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 rounded text-lg"
